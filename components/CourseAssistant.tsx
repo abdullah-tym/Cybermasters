@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { GoogleGenAI } from '@google/genai';
 import { ChatMessage } from '../types';
@@ -25,10 +24,11 @@ const CourseAssistant: React.FC = () => {
     setIsLoading(true);
 
     try {
-      // Use Vite-native import.meta.env
+      // Use Vite-native import.meta.env with VITE_ prefix
       const apiKey = import.meta.env.VITE_API_KEY;
+      
       if (!apiKey) {
-        throw new Error('VITE_API_KEY is not defined');
+        throw new Error('VITE_API_KEY is not defined. Please check your environment variables.');
       }
 
       const ai = new GoogleGenAI({ apiKey });
