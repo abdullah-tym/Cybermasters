@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { GoogleGenAI } from '@google/genai';
 import { ChatMessage } from '../types';
@@ -24,10 +25,14 @@ const CourseAssistant: React.FC = () => {
     setIsLoading(true);
 
     try {
-      // Fix: Initialize GoogleGenAI using the correct named parameter and direct environment variable
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      // Use Vite-native import.meta.env
+      const apiKey = import.meta.env.VITE_API_KEY;
+      if (!apiKey) {
+        throw new Error('VITE_API_KEY is not defined');
+      }
+
+      const ai = new GoogleGenAI({ apiKey });
       
-      // Fix: Follow the recommended generateContent call structure with systemInstruction in config
       const response = await ai.models.generateContent({
         model: 'gemini-3-flash-preview',
         contents: input,
@@ -42,7 +47,6 @@ const CourseAssistant: React.FC = () => {
         }
       });
 
-      // Fix: Access the .text property directly as a string (not a method call)
       const aiText = response.text || 'عذراً، لم أستطع معالجة طلبك حالياً.';
       setMessages(prev => [...prev, { role: 'model', text: aiText }]);
     } catch (error) {
